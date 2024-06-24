@@ -60,7 +60,10 @@ class NODE_OT_straighten_reroutes(Operator):
         except IndexError:
             return False
 
-    def straighten_reroutes(self, reroutes, *, in_out, padding, should_reposition):
+    def straighten_reroutes(self, reroutes, *, in_out):
+        prefs = fetch_user_preferences()
+        padding = prefs.reroute_padding
+
         if in_out == 'INPUT':
             clamp_function = max
             offset = padding
@@ -75,7 +78,7 @@ class NODE_OT_straighten_reroutes(Operator):
             target_socket = self.get_connected_socket(reroute, in_out=in_out)
             target = utils.get_socket_location(target_socket)
             
-            if should_reposition:
+            if prefs.reposition_exceeding_reroutes:
                 reroute.location.x = clamp_function(reroute.location.x , target.x + offset)
             reroute.location.y = target.y
 
@@ -84,28 +87,26 @@ class NODE_OT_straighten_reroutes(Operator):
     def execute(self, context):
         target_reroutes = self.target_reroutes
         prefs = fetch_user_preferences()
-        padding = prefs.reroute_padding
 
         nodes = utils.fetch_nodes(context, target=prefs.operator_nodes)
         reroutes = tuple(n for n in nodes if n.bl_idname == "NodeReroute")
-        should_reposition = prefs.reposition_exceeding_reroutes
 
         old_positions = tuple(map(tuple, (r.location for r in reroutes)))
 
         with utils.TemporaryUnframe(nodes=nodes):
             if target_reroutes == 'INPUT':
-                self.straighten_reroutes(reroutes, in_out='INPUT', padding=padding, should_reposition=should_reposition)
+                self.straighten_reroutes(reroutes, in_out='INPUT')
 
             elif target_reroutes == 'OUTPUT':
-                self.straighten_reroutes(reroutes, in_out='OUTPUT', padding=padding, should_reposition=should_reposition)
+                self.straighten_reroutes(reroutes, in_out='OUTPUT')
 
             elif target_reroutes == 'BOTH':
                 if prefs.resolve_ambiguous_reroutes == 'INPUT':
-                    self.straighten_reroutes(reroutes, in_out='OUTPUT', padding=padding, should_reposition=should_reposition)
-                    self.straighten_reroutes(reroutes, in_out='INPUT', padding=padding, should_reposition=should_reposition)
+                    self.straighten_reroutes(reroutes, in_out='OUTPUT')
+                    self.straighten_reroutes(reroutes, in_out='INPUT')
                 elif prefs.resolve_ambiguous_reroutes == 'OUTPUT':
-                    self.straighten_reroutes(reroutes, in_out='INPUT', padding=padding, should_reposition=should_reposition)
-                    self.straighten_reroutes(reroutes, in_out='OUTPUT', padding=padding, should_reposition=should_reposition)
+                    self.straighten_reroutes(reroutes, in_out='INPUT')
+                    self.straighten_reroutes(reroutes, in_out='OUTPUT')
 
         new_positions = tuple(map(tuple, (r.location for r in reroutes)))
 
