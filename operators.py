@@ -11,7 +11,7 @@ class NODE_OT_straighten_reroutes(Operator):
     bl_idname = "node.straighten_reroutes"
     bl_label = "Straighten Reroutes"
     bl_description = "Reposition reroutes such that the links they have to other nodes are straight"
-    bl_options = {"REGISTER", "UNDO_GROUPED"}
+    bl_options = {"REGISTER", "UNDO"}
 
     target_reroutes: EnumProperty(
         name="Target Reroutes",
@@ -90,6 +90,8 @@ class NODE_OT_straighten_reroutes(Operator):
         reroutes = tuple(n for n in nodes if n.bl_idname == "NodeReroute")
         should_reposition = prefs.reposition_exceeding_reroutes
 
+        old_positions = tuple(map(tuple, (r.location for r in reroutes)))
+
         with utils.TemporaryUnframe(nodes=nodes):
             if target_reroutes == 'INPUT':
                 self.straighten_reroutes(reroutes, in_out='INPUT', padding=padding, should_reposition=should_reposition)
@@ -105,7 +107,14 @@ class NODE_OT_straighten_reroutes(Operator):
                     self.straighten_reroutes(reroutes, in_out='INPUT', padding=padding, should_reposition=should_reposition)
                     self.straighten_reroutes(reroutes, in_out='OUTPUT', padding=padding, should_reposition=should_reposition)
 
-        return {"FINISHED"}
+        new_positions = tuple(map(tuple, (r.location for r in reroutes)))
+
+        if old_positions == new_positions:
+            self.report({'WARNING'}, 'Reroute links are already straightened.')
+            return {"CANCELLED"}
+        else:
+            self.report({'INFO'}, 'Successfully straightened reroute links.')
+            return {"FINISHED"}
 
 
 classes = (
