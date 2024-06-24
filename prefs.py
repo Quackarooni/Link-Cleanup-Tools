@@ -44,6 +44,22 @@ class NodeLinkCleanupPreferences(bpy.types.AddonPreferences):
 
     def draw(self, context):
         layout = self.layout
+
+        box = layout.box()
+        box.label(text="Straighten Reroute Links:")
+        
+        col1 = box.column(align=True)
+        col2 = box.column(align=True)
+
+        col1.prop(self, "reposition_exceeding_reroutes")
+        col1.separator(factor=0.5)
+        row = col1.row()
+        row.enabled = self.reposition_exceeding_reroutes
+        row.prop(self, "reroute_padding")
+
+        col2.label(text="Resolve Ambiguous Reroutes:")
+        col2.prop(self, "resolve_ambiguous_reroutes", text="")
+
         keymap_layout.draw_keyboard_shorcuts(self, layout, context)
 
 

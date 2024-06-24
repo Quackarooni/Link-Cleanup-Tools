@@ -20,9 +20,6 @@ class NODE_PT_straighten_reroute_links(Panel):
 
         layout.label(text="Apply To:")
         layout.prop(prefs, "operator_nodes", text="")
-        layout.prop(prefs, "reroute_padding")
-        layout.prop(prefs, "reposition_exceeding_reroutes")
-        layout.prop(prefs, "resolve_ambiguous_reroutes")
 
         row = layout.row(align=True)
         row.operator("node.straighten_reroutes", text="Inputs").target_reroutes = 'INPUT'
