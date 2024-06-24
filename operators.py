@@ -88,7 +88,7 @@ class NODE_OT_straighten_reroutes(Operator):
         target_reroutes = self.target_reroutes
         prefs = fetch_user_preferences()
 
-        nodes = utils.fetch_nodes(context, target=prefs.operator_nodes)
+        nodes = utils.fetch_nodes(context, target=prefs.apply_to)
         reroutes = tuple(n for n in nodes if n.bl_idname == "NodeReroute")
 
         old_positions = tuple(map(tuple, (r.location for r in reroutes)))
@@ -139,16 +139,16 @@ class NODE_OT_toggle_straighten_reroute_nodes(Operator):
 
     def execute(self, context):
         prefs = fetch_user_preferences()
-        target = prefs.operator_nodes
+        target = prefs.apply_to
 
         if target == 'SELECTED':
-            prefs.operator_nodes = "ALL"
+            prefs.apply_to = "ALL"
         elif target == 'ALL':
-            prefs.operator_nodes = "SELECTED" 
+            prefs.apply_to = "SELECTED" 
 
         utils.refresh_ui(context)        
 
-        self.report({'INFO'}, f"Target nodes set to '{prefs.operator_nodes}.'")
+        self.report({'INFO'}, f"Target nodes set to '{prefs.apply_to}.'")
         return {"FINISHED"}
 
 

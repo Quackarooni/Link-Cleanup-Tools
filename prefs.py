@@ -22,8 +22,8 @@ class NodeLinkCleanupPreferences(bpy.types.AddonPreferences):
         description="Specifies how far the horizontal padding is when straightening reroutes"
     )
 
-    operator_nodes: EnumProperty(
-        name="Operator Nodes",
+    apply_to: EnumProperty(
+        name="Apply To",
         items=(
             ("ALL", "All Nodes", "Target all nodes of current nodetree"),
             ("SELECTED", "Selected Nodes", "Target only the selected nodes in current nodetree")

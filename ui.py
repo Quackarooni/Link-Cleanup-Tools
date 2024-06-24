@@ -19,7 +19,7 @@ class NODE_PT_straighten_reroute_links(Panel):
         prefs = fetch_user_preferences()
 
         layout.label(text="Apply To:")
-        layout.prop(prefs, "operator_nodes", text="")
+        layout.prop(prefs, "apply_to", text="")
 
         row = layout.row(align=True)
         row.operator("node.straighten_reroutes", text="Inputs").target_reroutes = 'INPUT'
