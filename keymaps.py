@@ -1,6 +1,7 @@
 from .keymap_ui import KeymapItemDef, KeymapStructure, KeymapLayout
 from .operators import (
     NODE_OT_straighten_reroutes,
+    NODE_OT_toggle_straighten_reroute_nodes,
 )
 
 keymap_info = {
@@ -15,7 +16,10 @@ keymap_structure = KeymapStructure(
             KeymapItemDef(NODE_OT_straighten_reroutes.bl_idname, props={"target_reroutes": "INPUT"}, **keymap_info),
             KeymapItemDef(NODE_OT_straighten_reroutes.bl_idname, props={"target_reroutes": "OUTPUT"}, **keymap_info),
             KeymapItemDef(NODE_OT_straighten_reroutes.bl_idname, props={"target_reroutes": "BOTH"}, **keymap_info),
-        )
+        ),
+        "Properties":(
+             KeymapItemDef(NODE_OT_toggle_straighten_reroute_nodes.bl_idname, **keymap_info),
+        ),
     }
 )
 

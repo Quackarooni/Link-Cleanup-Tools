@@ -9,6 +9,12 @@ weird_offset = 10
 reroute_width = 10
 
 
+def refresh_ui(context):
+    for region in context.area.regions:
+        region.tag_redraw()
+    return None
+
+
 class TemporaryUnframe:
     def __init__(self, nodes):
         self.parent_dict = {}

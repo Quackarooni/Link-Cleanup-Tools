@@ -118,8 +118,43 @@ class NODE_OT_straighten_reroutes(Operator):
             return {"FINISHED"}
 
 
+class NODE_OT_toggle_straighten_reroute_nodes(Operator):
+    bl_idname = "node.toggle_straighten_reroute_nodes"
+    bl_label = "Apply To"
+    bl_description = "Reposition reroutes such that the links they have to other nodes are straight"
+    bl_options = {"INTERNAL"}
+
+    @classmethod
+    def poll(cls, context):
+        try:
+            space = context.space_data
+
+            is_existing = space.node_tree is not None
+            is_node_editor = space.type == "NODE_EDITOR"
+
+            return all((is_existing, is_node_editor))
+        
+        except AttributeError:
+            return False
+
+    def execute(self, context):
+        prefs = fetch_user_preferences()
+        target = prefs.operator_nodes
+
+        if target == 'SELECTED':
+            prefs.operator_nodes = "ALL"
+        elif target == 'ALL':
+            prefs.operator_nodes = "SELECTED" 
+
+        utils.refresh_ui(context)        
+
+        self.report({'INFO'}, f"Target nodes set to '{prefs.operator_nodes}.'")
+        return {"FINISHED"}
+
+
 classes = (
     NODE_OT_straighten_reroutes,
+    NODE_OT_toggle_straighten_reroute_nodes,
 )
 
 
