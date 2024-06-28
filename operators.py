@@ -148,7 +148,7 @@ class NODE_OT_toggle_straighten_reroute_nodes(Operator):
 
         utils.refresh_ui(context)        
 
-        self.report({'INFO'}, f"Target nodes set to '{prefs.apply_to}.'")
+        self.report({'INFO'}, f"{NODE_OT_straighten_reroutes.bl_label} : Target nodes set to '{prefs.apply_to}.'")
         return {"FINISHED"}
 
 
