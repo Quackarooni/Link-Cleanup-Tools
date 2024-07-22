@@ -1,10 +1,24 @@
 import bpy
 
 from bpy.types import Operator
-from bpy.props import EnumProperty
+from bpy.props import EnumProperty, FloatProperty
 
 from . import utils
 from .utils import fetch_user_preferences
+
+# EnumProperties that are generated dynamically tend to misbehave as Python tends to clean up memory
+# Caching the results forces Python to keep track of the data while the operator is in use
+enum_callback_cache = []
+
+
+def cache_enum_results(function):
+    def wrapped_func(self, context):
+        enum_callback_cache.clear()
+        output = function(self, context)
+        enum_callback_cache.extend(output)
+        return output
+
+    return wrapped_func
 
 
 class NODE_OT_straighten_reroutes(Operator):
@@ -118,6 +132,26 @@ class NODE_OT_straighten_reroutes(Operator):
             return {"FINISHED"}
 
 
+class NODE_OT_straighten_node_link(Operator):
+    bl_idname = "node.straighten_node_link"
+    bl_label = "Straighten Node Link"
+    bl_description = "Reposition active node such that the chosen link is straight"
+    bl_options = {"REGISTER", "UNDO"}
+
+    offset: FloatProperty()
+
+    @classmethod
+    def poll(cls, context):
+        return context.active_node is not None
+
+    def execute(self, context):
+        prefs = fetch_user_preferences()
+        node = context.active_node
+        node.location.y += self.offset
+
+        return {"FINISHED"}
+
+
 class NODE_OT_toggle_straighten_reroute_nodes(Operator):
     bl_idname = "node.toggle_straighten_reroute_nodes"
     bl_label = "Apply To"
@@ -155,6 +189,7 @@ class NODE_OT_toggle_straighten_reroute_nodes(Operator):
 classes = (
     NODE_OT_straighten_reroutes,
     NODE_OT_toggle_straighten_reroute_nodes,
+    NODE_OT_straighten_node_link,
 )
 
 
