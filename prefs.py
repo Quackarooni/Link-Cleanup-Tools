@@ -28,7 +28,7 @@ class NodeLinkCleanupPreferences(bpy.types.AddonPreferences):
             ("ALL", "All Nodes", "Target all nodes of current nodetree"),
             ("SELECTED", "Selected Nodes", "Target only the selected nodes in current nodetree")
         ),
-        default='ALL',
+        default='SELECTED',
         description="Specifies which nodes the operators would target")
 
 
