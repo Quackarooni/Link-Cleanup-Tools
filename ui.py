@@ -55,8 +55,9 @@ class NODE_MT_straighten_node_link(Menu):
     def draw(self, context):
         layout = self.layout
 
-        for offset, label, icon in self.define_items(context):
-            layout.operator("node.straighten_node_link", text=label, icon=icon).offset = offset
+        if context.active_node is not None:
+            for offset, label, icon in self.define_items(context):
+                layout.operator("node.straighten_node_link", text=label, icon=icon).offset = offset
 
 
 classes = (
