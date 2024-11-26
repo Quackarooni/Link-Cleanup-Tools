@@ -87,7 +87,8 @@ class NODE_OT_straighten_reroutes(Operator):
         else:
             raise ValueError(f"'{in_out}' invalid value for parameter 'in_out'.")
 
-        reroutes_to_straighten = tuple(r for r in reroutes if self.is_connected_to_non_reroute(r, in_out=in_out))
+        #reroutes_to_straighten = tuple(r for r in reroutes if self.is_connected_to_non_reroute(r, in_out=in_out))
+        reroutes_to_straighten = tuple(r for r in reroutes)
         for reroute in reroutes_to_straighten:
             target_socket = self.get_connected_socket(reroute, in_out=in_out)
             target = utils.get_socket_location(target_socket)
