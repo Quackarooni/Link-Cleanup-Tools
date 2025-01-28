@@ -91,6 +91,9 @@ class NODE_OT_straighten_reroutes(Operator):
         reroutes_to_straighten = tuple(r for r in reroutes)
         for reroute in reroutes_to_straighten:
             target_socket = self.get_connected_socket(reroute, in_out=in_out)
+            if target_socket is None:
+                continue
+            
             target = utils.get_socket_location(target_socket)
             
             if prefs.reposition_exceeding_reroutes:
