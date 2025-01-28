@@ -210,7 +210,7 @@ def get_socket_location(sk):
     if (not sk.enabled) and (sk.hide):
         return Vector((0, 0))
 
-    return Vector(BNodeSocket.get_fields(sk).runtime.contents.location[:])
+    return Vector(BNodeSocket.get_fields(sk).runtime.contents.location[:]) / bpy.context.preferences.view.ui_scale
 
 
 StructBase._init_structs()
